@@ -1,0 +1,44 @@
+[
+  {
+    "serialNumber": "1111111111111111111",
+    "patrimony": "8888888888888888",
+    "problemDescription": "888888888",
+    "location": "8888",
+    "repaired": true
+  },
+  {
+    "serialNumber": "22222222",
+    "patrimony": "222222222222",
+    "problemDescription": "22222222",
+    "location": "22222222",
+    "repaired": true
+  },
+  {
+    "serialNumber": "3333333333",
+    "patrimony": "00000",
+    "problemDescription": "000000",
+    "location": "00000000",
+    "repaired": true
+  },
+  {
+    "serialNumber": "4444444444",
+    "patrimony": "444444444",
+    "problemDescription": "444444444",
+    "location": "444444444",
+    "repaired": true
+  },
+  {
+    "serialNumber": "55555555",
+    "patrimony": "5555555555",
+    "problemDescription": "5555555555",
+    "location": "555555555",
+    "repaired": true
+  },
+  {
+    "serialNumber": "888888888",
+    "patrimony": "999999",
+    "problemDescription": "9999999",
+    "location": "99999999999",
+    "repaired": true
+  }
+]

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Relógios</title>
+    <link rel="stylesheet" href="css/cadastro-relogios.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Cadastro de Relógios</h2>
+        <form id="watchForm">
+            <label for="serialNumber">Número de Série:</label>
+            <input type="text" id="serialNumber" name="serialNumber" required>
+
+            <label for="patrimony">Patrimônio:</label>
+            <input type="text" id="patrimony" name="patrimony" required>
+
+            <label for="problemDescription">Descrição do Problema:</label>
+            <input type="text" id="problemDescription" name="problemDescription" required>
+
+            <label for="location">Nome do Local:</label>
+            <input type="text" id="location" name="location" required>
+
+            <button type="submit">Cadastrar Relógio</button>
+            <button type="button" id="viewProblemWatchesBtn">Visualizar Relógios com Problema</button> 
+        </form>
+    </div>
+    <script>
+       // quando o formulario e enviado evita que a pagina recarregue
+    document.getElementById('watchForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // pega os valores dos campos do formulario
+        const serialNumber = document.getElementById('serialNumber').value;
+        const patrimony = document.getElementById('patrimony').value;
+        const problemDescription = document.getElementById('problemDescription').value;
+        const location = document.getElementById('location').value;
+
+        // envia esses dados para o servidor
+        fetch('/register-watch', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json' //enviando json
+            },
+            body: JSON.stringify({ serialNumber, patrimony, problemDescription, location })
+        })
+        .then(response => response.json()) // converte em json
+        .then(data => {
+            alert(data.message);
+            //caso de certo limpa o formulario
+            if (data.success) {
+                document.getElementById('watchForm').reset();
+            }
+        })
+        .catch(error => console.error('Error:', error)); 
+    });
+        // redireciona para a tela de relogios com problema 
+        document.getElementById('viewProblemWatchesBtn').addEventListener('click', function() {
+            window.location.href = '/relogios-com-problema.html'; 
+        });
+    </script>
+</body>
+</html>

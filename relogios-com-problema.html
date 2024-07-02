@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relógios com Problema</title>
+    <link rel="stylesheet" href="css/problema.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Relógios com Problema</h2>
+        <ul id="problemWatchesList">
+            <!-- Exibe os relógios com problemas -->
+        </ul>
+        <button onclick="window.location.href = '/relogios-consertados.html';">Ver Relógios Consertados</button>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Relógio</h2>
+            <form id="editForm">
+                <label for="editSerialNumber">Número de Série:</label>
+                <input type="text" id="editSerialNumber" name="serialNumber" readonly><br>
+                <label for="editPatrimony">Patrimônio:</label>
+                <input type="text" id="editPatrimony" name="patrimony"><br>
+                <label for="editProblemDescription">Descrição do Problema:</label>
+                <input type="text" id="editProblemDescription" name="problemDescription"><br>
+                <label for="editLocation">Local:</label>
+                <input type="text" id="editLocation" name="location"><br>
+                <button type="submit">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Função para carregar os relógios com problemas
+        function loadProblemWatches() {
+            fetch('/watches-with-problems')
+                .then(response => response.json())
+                .then(data => {
+                    const problemWatchesList = document.getElementById('problemWatchesList');
+                    problemWatchesList.innerHTML = '';
+
+                    data.forEach(watch => {
+                        if (!watch.repaired) {
+                            const listItem = document.createElement('li');
+                            listItem.setAttribute('data-serial', watch.serialNumber); 
+                            listItem.textContent = `Número de Série: ${watch.serialNumber}, Patrimônio: ${watch.patrimony}, Descrição do Problema: ${watch.problemDescription}, Local: ${watch.location}`;
+
+                            // Botão para marcar como consertado
+                            const repairButton = document.createElement('button');
+                            repairButton.textContent = 'Marcar como Consertado';
+                            repairButton.addEventListener('click', () => markAsRepaired(watch.serialNumber));
+
+                            // Botão para editar
+                            const editButton = document.createElement('button');
+                            editButton.textContent = 'Editar';
+                            editButton.addEventListener('click', () => openEditModal(watch));
+
+                            listItem.appendChild(repairButton);
+                            listItem.appendChild(editButton);
+                            problemWatchesList.appendChild(listItem);
+                        }
+                    });
+                })
+                .catch(error => console.error('Erro ao carregar relógios com problemas:', error));
+        }
+
+        // Função para marcar um relógio como consertado
+        function markAsRepaired(serialNumber) {
+            fetch('/mark-as-repaired', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ serialNumber })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Recarrega a lista de relógios com problemas após marcar como consertado
+                    loadProblemWatches();
+                } else {
+                    console.error('Erro ao marcar relógio como consertado:', data.message);
+                }
+            })
+            .catch(error => console.error('Erro ao marcar relógio como consertado:', error));
+        }
+
+        // Função para abrir o modal de edição
+        function openEditModal(watch) {
+            document.getElementById('editSerialNumber').value = watch.serialNumber;
+            document.getElementById('editPatrimony').value = watch.patrimony;
+            document.getElementById('editProblemDescription').value = watch.problemDescription;
+            document.getElementById('editLocation').value = watch.location;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        // Fecha o modal de edição
+        document.querySelector('.close').addEventListener('click', () => {
+            document.getElementById('editModal').style.display = 'none';
+        });
+
+        // Salva as alterações feitas no modal de edição
+        document.getElementById('editForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const serialNumber = document.getElementById('editSerialNumber').value;
+            const patrimony = document.getElementById('editPatrimony').value;
+            const problemDescription = document.getElementById('editProblemDescription').value;
+            const location = document.getElementById('editLocation').value;
+
+            fetch('/update-watch', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ serialNumber, patrimony, problemDescription, location })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('editModal').style.display = 'none';
+                    loadProblemWatches(); // Atualiza a lista após a edição
+                } else {
+                    console.error('Erro ao atualizar o relógio.');
+                }
+            })
+            .catch(error => console.error('Erro ao atualizar o relógio:', error));
+        });
+
+        // Carrega os relógios com problemas quando a página é carregada
+        window.addEventListener('load', loadProblemWatches);
+    </script>
+</body>
+</html>

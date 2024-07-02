@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de Cadastro</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Cadastro</h2>
+        <form id="signupForm">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm-password">Confirme a Senha:</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+        <button onclick="location.href='login.html'">Já tem uma conta? Faça login</button>
+    </div>
+    <script>
+        //formulario de inscricao enviado
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+           e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+    
+            // envia os dados para o servidor
+            fetch('/submit-form', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({ name, email, password }) // transforma os dados em json e envia para o servidor
+            })
+            .then(response => response.json()) 
+            .then(data => {
+                alert(data.message);
+                // redireciona para a página de login
+                if (data.success) {
+                    window.location.href = 'login.html';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de Login</title>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <script>
+        //formulario de login enviado
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+    
+            // envia os dados para o servidor para fazer login
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({ email, password }) 
+            })
+            .then(response => response.json()) // converte a resposta do servidor em json
+            .then(data => {
+                
+                alert(data.message);
+                // se o login der certo redireciona para a página de cadastro de relogios
+                if (data.success) {
+                    window.location.href = 'cadastro-relogios.html';
+                }
+            })
+            .catch(error => console.error('Error:', error)); 
+        });
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!-- <!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relógios Consertados</title>
+    <link rel="stylesheet" href="css/consertados.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Relógios Consertados</h2>
+        <ul id="repairedWatchesList">
+            
+        </ul>
+    </div>
+
+    <script>
+        // funçao para carregar os relogios consertados 
+        function loadRepairedWatches() {
+            fetch('/repaired-watches')
+            .then(response => response.json()) 
+            .then(data => {
+                console.log(data);
+                const repairedWatchesList = document.getElementById('repairedWatchesList'); 
+                repairedWatchesList.innerHTML = '';
+    
+                // criam um item de lista e o adiciona na lista
+                data.forEach(watch => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Número de Série: ${watch.serialNumber}, Patrimônio: ${watch.patrimony}, Descrição do Problema: ${watch.problemDescription}, Local: ${watch.location}`;
+                    repairedWatchesList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Erro ao carregar relógios consertados:', error)); 
+        }
+    
+        // exibe os relogios consertados quando carrega a pagina
+        window.addEventListener('load', loadRepairedWatches);
+    </script>
+    
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relógios Consertados</title>
+    <link rel="stylesheet" href="css/consertados.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Relógios Consertados</h2>
+        <button onclick="generateReport()">Gerar Relatório</button>
+        <h3>Relógios Consertados</h3>
+        <ul id="repairedWatchesList">
+            
+        </ul>
+        <h3>Relógios com Problemas</h3>
+        <ul id="watchesWithProblemsList">
+            
+        </ul>
+        
+    </div>
+
+    <script>
+        function loadRepairedWatches() {
+            fetch('/repaired-watches')
+            .then(response => response.json())
+            .then(data => {
+                const repairedWatchesList = document.getElementById('repairedWatchesList');
+                repairedWatchesList.innerHTML = '';
+
+                data.forEach(watch => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Número de Série: ${watch.serialNumber}, Patrimônio: ${watch.patrimony}, Descrição do Problema: ${watch.problemDescription}, Local: ${watch.location}`;
+                    repairedWatchesList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Erro ao carregar relógios consertados:', error));
+        }
+
+        function generateReport() {
+            fetch('/watches-with-problems')
+            .then(response => response.json())
+            .then(data => {
+                const watchesWithProblemsList = document.getElementById('watchesWithProblemsList');
+                watchesWithProblemsList.innerHTML = '';
+
+                data.forEach(watch => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Número de Série: ${watch.serialNumber}, Patrimônio: ${watch.patrimony}, Descrição do Problema: ${watch.problemDescription}, Local: ${watch.location}`;
+                    watchesWithProblemsList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Erro ao gerar relatório:', error));
+        }
+
+        window.addEventListener('load', loadRepairedWatches);
+    </script>
+    
+</body>
+</html>
